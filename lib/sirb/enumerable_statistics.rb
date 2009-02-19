@@ -123,31 +123,42 @@ module Sirb #:nodoc:
     # The slow way is to iterate up to the middle point.  A faster way is to
     # use the index, when available.  If a block is supplied, always iterate
     # to the middle point. 
-    def median(&block)
-      return iterate_midway(&block) if block_given?
+    def median(ratio=0.5, &block)
+      return iterate_midway(ratio, &block) if block_given?
       begin
-        mid1 = size.div(2)
-        mid2 = (size % 2 == 0) ? size.div(2) : (size / 2.0).ceil
-        # I don't pass the block to the sort, because a sort block needs to look
-        # something like: {|x,y| x <=> y}.  To get around this, set the default 
-        # block on the object.
+        mid1, mid2 = middle_two
         sorted = new_sort
-        med1 = sorted[mid1]
-        med2 = sorted[mid2]
-        puts 'aaaaaaaaaaaaa', mid1, mid2
-        (med1 + med2) / 2
+        med1, med2 = sorted[mid1], sorted[mid2]
+        return med1 if med1 == med2
+        return med1 + ((med2 - med1) * ratio)
       rescue
-        iterate_midway(&block)
+        iterate_midway(ratio, &block)
       end
     end
     
+    def middle_two
+      mid2 = size.div(2)
+      mid1 = (size % 2 == 0) ? mid2 - 1 : mid2
+      return mid1, mid2
+    end
+    
+    def median_position
+      middle_two.last
+    end
+    
+    def first_half(&block)
+      fh = self[0..median_position].dup
+    end
+    
+    def second_half(&block)
+      # Total crap, but it's the way R does things, and this will most likely
+      # only be used to feed R some numbers to plot, if at all. 
+      sh = size <= 5 ? self[median_position..-1].dup : self[median_position - 1..-1].dup
+    end
+    
     # An iterative version of median
-    def iterate_midway(&block)
-      mid1, mid2, last_value, j = size.div(2), (size / 2.0).ceil, nil, 0
-      # I don't pass the block to the sort, because a sort block needs to look
-      # something like: {|x,y| x <=> y}.  To get around this, set the default 
-      # block on the object.
-      sorted, sort1, sort2 = new_sort, nil, nil
+    def iterate_midway(ratio, &block)
+      mid1, mid2, last_value, j, sorted, sort1, sort2 = middle_two, nil, 0, new_sort, nil, nil
 
       if block_given?
         sorted.each do |i|
@@ -174,14 +185,15 @@ module Sirb #:nodoc:
           break if j >= mid2
         end
       end
-      return (med1 + med2) / 2
+      return med1 if med1 == med2
+      return med1 + ((med2 - med1) * ratio)
     end
     protected :iterate_midway
     
     # Just an array of [min, max] to comply with R uses of the work.  Use
     # range_as_range if you want a real Range. 
     def range(&block)
-      [Min(&block), Max(&block)]
+      [min(&block), max(&block)]
     end
     
     # Useful for setting a real range class (FixedRange).
@@ -194,25 +206,25 @@ module Sirb #:nodoc:
     end
     
     def range_as_range(&block)
-      range_class.new(Min(&block), Max(&block))
+      range_class.new(min(&block), max(&block))
     end
     
+    # I don't pass the block to the sort, because a sort block needs to look
+    # something like: {|x,y| x <=> y}.  To get around this, set the default 
+    # block on the object.
     def new_sort(&block)
       if block_given?
-        map { |i| yield(i) }.sort
+        map { |i| yield(i) }.sort.dup
       elsif default_block
-        map { |i| default_block[*i] }.sort
+        map { |i| default_block[*i] }.sort.dup
       else
-        sort()
+        sort().dup
       end
     end
     
     # Doesn't overwrite things like Matrix#rank
     def rank(&block)
 
-      # I don't pass the block to the sort, because a sort block needs to look
-      # something like: {|x,y| x <=> y}.  To get around this, set the default 
-      # block on the object.
       sorted = new_sort
 
       if block_given?
@@ -241,11 +253,34 @@ module Sirb #:nodoc:
       end
     end
     
+    # First quartile: nth_split_by_m(1, 4)
+    # Third quartile: nth_split_by_m(3, 4)
+    # Median: nth_split_by_m(1, 2)
+    # Doesn't match R, and it's silly to try to.
+    # def nth_split_by_m(n, m)
+    #   sorted  = new_sort
+    #   dividers = m - 1
+    #   if size % m == dividers # Divides evenly
+    #     # Because we have a 0-based list, we get the floor
+    #     i = ((size / m.to_f) * n).floor
+    #     j = i
+    #   else
+    #     # This reflects R's approach, which I don't think I agree with.
+    #     i = (((size / m.to_f) * n) - 1)
+    #     i = i > (size / m.to_f) ? i.floor : i.ceil
+    #     j = i + 1
+    #   end
+    #   sorted[i] + ((n / m.to_f) * (sorted[j] - sorted[i]))
+    # end
+    
     def quantile(&block)
-      ordered = order(&block)
-      first = size.div(4) - 1
-      third = (size * 0.75).floor - 1
-      [Min(&block), ordered[first], median(&block), ordered[third], Max(&block)]
+      [
+        min(&block), 
+        first_half(&block).median(0.25, &block), 
+        median(&block), 
+        second_half(&block).median(0.75, &block), 
+        max(&block)
+      ]
     end
     
     def cum_sum(sorted=false, &block)
@@ -262,7 +297,7 @@ module Sirb #:nodoc:
     alias :cumulative_sum :cum_sum
 
     def cum_prod(sorted=false, &block)
-      prod = 0.0
+      prod = 1.0
       obj = sorted ? self.new_sort : self
       if block_given?
         obj.map { |i| prod *= yield(i) }
@@ -277,24 +312,26 @@ module Sirb #:nodoc:
     def cum_max(&block)
       current_max = nil
       if block_given?
-        map {|i| max(current_max, yield(i)) }
+        map {|i| current_max = Object.max(current_max, yield(i)) }
       elsif default_block
-        map {|i| max(current_max, default_block[*i]) }
+        map {|i| current_max = Object.max(current_max, default_block[*i]) }
       else
-        map {|i| max(current_max, i) }
+        map {|i| current_max = Object.max(current_max, i) }
       end
     end
+    alias :cumulative_max :cum_max
     
     def cum_min(&block)
       current_min = nil
       if block_given?
-        map {|i| min(current_min, yield(i)) }
+        map {|i| current_min = Object.min(current_min, yield(i)) }
       elsif default_block
-        map {|i| min(current_min, default_block[*i]) }
+        map {|i| current_min = Object.min(current_min, default_block[*i]) }
       else
-        map {|i| min(current_min, i) }
+        map {|i| current_min = Object.min(current_min, i) }
       end
     end
+    alias :cumulative_min :cum_min
 
   end
   

@@ -8,15 +8,21 @@ module Sirb #:nodoc:
       x.inject(1.0) {|sum, a| sum *= a}
     end
     
-    def to_pairs(x,y,z=0.0, &block)
+    # There are going to be a lot more of these kinds of things, so pay
+    # attention. 
+    def to_pairs(x, y, &block)
       n = min(x.size, y.size)
-      (0...n).inject(z) { |sum, i| sum += block.call(x[i], y[i]) }
+      (0...n).map {|i| block.call(x[i], y[i]) }
+    end
+    
+    def sum_pairs(x, y, z=0.0, &block)
+      to_pairs(x,y,&block).inject(z) {|sum, i| sum += i}
     end
     
     # This may be completely off!!  Write the tests!
     def correlation(x, y)
       n = min(x.size, y.size)
-      ( to_pairs(x,y) { |a,b| a * b } - (( x.sum * y.sum ) / n.to_f)) / ((n - 1 ) * x.std * y.std)
+      ( sum_pairs(x,y) { |a,b| a * b } - (( x.sum * y.sum ) / n.to_f)) / ((n - 1 ) * x.std * y.std)
     end
     alias :cor :correlation
     

@@ -1,8 +1,10 @@
 bin/sirb
+examples/basic_usage.rb
 lib/overrides/array.rb
 lib/overrides/module.rb
 lib/sirb/enumerable_statistics.rb
 lib/sirb/general_statistics.rb
+lib/sirb/inter_enumerable_statistics.rb
 lib/sirb/loader.rb
 lib/sirb.rb
 lib/version.rb
@@ -13,6 +15,7 @@ spec/lib/overrides/array_spec.rb
 spec/lib/overrides/module_spec.rb
 spec/lib/sirb/enumerable_statistics_spec.rb
 spec/lib/sirb/general_statistics_spec.rb
+spec/lib/sirb/inter_enumerable_statistics_spec.rb
 spec/lib/sirb/loader_spec.rb
 spec/lib/sirb_spec.rb
 spec/spec_helper.rb

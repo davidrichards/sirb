@@ -27,4 +27,29 @@ describe InterEnumerableStatistics do
     cor(a,b).should be_close(0.9112932, 0.0000001)
   end
   
+  it "should be able to call a block on pairs and then sum that up" do
+    a = [1,2,3]
+    b = [1,2,3]
+    to_pairs(a,b) { |a,b| a * b }.should eql([1, 4, 9])
+  end
+  
+  it "should be able to sum a set of pairs given a block operator" do
+    a = [1,2,3]
+    b = [1,2,3]
+    sum_pairs(a,b) { |a,b| a * b }.should eql(14.0)
+  end
+  
+  it "should be able to sum onto an arbitrary object" do
+    @a = [1,2,3]
+    @b = [1,2,3]
+    sum_pairs(@a,@b, 0) { |a,b| a * b }.should eql(14)
+    sum_pairs(@a,@b, 10) { |a,b| a * b }.should eql(24)
+  end
+  
+  it "should find the product of a list" do
+    x = [1,2,3,4]
+    product(*x).should eql(24.0)
+    product(1,2,3,4).should eql(24.0)
+  end
+  
 end

@@ -1,32 +1,142 @@
 = Sirb
 
-* FIX (url)
+* http://github.com/davidrichards/sirb/tree/master
 
 == DESCRIPTION:
 
-FIX (describe your package)
+Statistics + IRB.  This offers a series of useful tools that a console should probably have, if your goal is to crunch a few numbers.  It includes all the packages that I use, if you have them.  Statisticus will have a standard library of statistical methods that you may want to have access to, so it's probably worth loading that gem as well.
 
 == FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
+Has a set of rather useful functions setup:
+
+* max 
+* min 
+* sum 
+* mean
+* median 
+* range  
+* variance (also var)
+* standard_deviation (also std)
+* sort
+* rank
+* order  
+* quantile  
+* cumulative_sum (also cum_sum)
+* cumulative_product (also cum_prod)
+* cumulative_max (also cum_max)
+* cumulative_min (also cum_min)
+
+For comparing lists, you can use:
+
+* correlation (also cor)
+* p_max  
+* p_min
+
+For other things, you can use:
+
+* max
+* min
+* product
+* to_pairs
+
+Right now, it attempts to load the following libraries (if available):
+
+* NArray
+* RGL
+* matrix
+* RNum
+* Statisticus
+* RBTree
+* mathn
+* This library
+
+I'm generally dissatisfied with quantile, which I think matches the way that R does their quantile.  However, R is inconsistent, and the community has inconsistent interpretations of how to handle that, so I just used R as the standard for today.
+
+I only mix this into Array right now.  I need to work through the various other classes that I use, and see if this will mix into all of those: Vector, Matrix, Hash, RBTree, etc.
 
 == SYNOPSIS:
 
-  FIX (code sample of usage)
+  From command line: 
+  sirb
+  >> @a = [3,2,6,7,14]
+  => [3, 2, 6, 7, 14]
+  >> @b = [4,6,2,1,19]
+  => [4, 6, 2, 1, 19]
+  >> @a.max 
+  => 14
+  >> @a.min 
+  => 2
+  >> @a.sum
+  => 32.0
+  >> # Most methods have meaningful block semantics
+  ?> @a.sum {|x| x ** x}
+  => 1.11120068264282e+16
+  >> @a.mean
+  => 6.4
+  >> @a.median 
+  => 6
+  >> @a.range  
+  => [2, 14]
+  >> @a.var
+  => 22.3
+  >> @a.std
+  => 4.72228758124704
+  >> @a.sort
+  => [2, 3, 6, 7, 14]
+  >> @a.rank
+  => [2, 1, 3, 4, 5]
+  >> @a.order  
+  => [2, 1, 3, 4, 5]
+  >> @a.quantile  
+  => [2, 3, 6, 7, 14]
+  >> @a.cum_sum
+  => [3.0, 5.0, 11.0, 18.0, 32.0]
+  >> @a.cum_prod
+  => [3.0, 6.0, 36.0, 252.0, 3528.0]
+  >> @a.cum_max
+  => [3, 3, 6, 7, 14]
+  >> @a.cum_min
+  => [3, 2, 2, 2, 2]
+  >> # And some methods between lists
+  ?> cor(@a,@b)
+  => 0.755599551729267
+  >> # This is the max of each pair (or set)
+  ?> p_max(@a,@b)
+  => [4, 6, 6, 7, 19]
+  >> # These take an arbitrary sized list
+  ?> p_max(@a,@b, [1,2,3,4,5])
+  => [4, 6, 6, 7, 19]
+  >> # And the min
+  ?> p_min(@a,@b)
+  => [3, 2, 2, 1, 14]
+  >> p_min(@a,@b, [1,2,3,4,5])
+  => [1, 2, 2, 1, 5]
+  >> # Finally, some methods out in the wild for general use:
+  ?> max(1,2,3,4,5)
+  => 5
+  >> min(1,2,3,4,5)
+  => 1
+  >> product(1,2,3,4,5)
+  => 120.0
+  >> to_pairs(@a,@b) { |a, b| a * b }
+  => [12, 12, 12, 7, 266]
+  >> sum_pairs(@a,@b) { |a, b| a * b }
+  => 309.0
 
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+* All the libraries are optional, but every time you log in, you will get a list of libraries that you may want to install.
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+* sudo gem install drichards-sirb
 
 == LICENSE:
 
 (The MIT License)
 
-Copyright (c) 2009 FIX
+Copyright (c) 2009 David Richards
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

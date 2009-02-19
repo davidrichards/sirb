@@ -59,20 +59,3 @@ module Sirb #:nodoc:
     end # InstanceMethods
   end # GeneralStatistics
 end # Sirb
-
-# # Testing
-# include Sirb
-# class A
-#   def max
-#     'max'
-#   end
-#   
-#   def min
-#     'min'
-#   end
-#   include GeneralStatistics
-# end
-# 
-# class Object
-#   include GeneralStatistics
-# end
