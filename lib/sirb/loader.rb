@@ -1,23 +1,35 @@
 class Loader
   class << self
+    def libs
+      @libs ||= {}
+    end
+
     def add_lib(name, &block)
-      @@lib ||= {}
+      name = name.to_s
       block ||= lambda{require name}
-      @@lib[name] = self.safe_require(&block)
+      self.libs[name] = self.safe_require(&block)
+    end
+    
+    def all_libs
+      self.libs.keys.sort
     end
     
     def libs_loaded
-      @@lib.map {|k, v| k if v }.compact
+      self.libs.map {|k, v| k if v }.compact
     end
     
     def failed_libs
-      @@lib.map {|k, v| k unless v }.compact
+      self.libs.map {|k, v| k unless v }.compact
     end
     
     def safe_require(&block)
       begin
         block.call
+        # If the lib is already loaded, it may return false, but it's available.
+        # If there's a problem with this, you should require the lib in a block
+        # and raise an exception if it fails. 
         true
+        # If the laod returns false, then 
       rescue Exception => e # Very important
         false
       end

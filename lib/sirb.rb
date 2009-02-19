@@ -1,5 +1,8 @@
 $:.unshift(File.expand_path(File.dirname(__FILE__)))
 
+module Sirb
+end
+
 require 'sirb/loader'
 
 Dir.glob("#{File.dirname(__FILE__)}/overrides/*.rb").each { |file| require file }
@@ -20,9 +23,9 @@ Loader.add_lib('rbtree')
 Loader.add_lib('statisticus')
 
 
-Loader.add_lib('scalar statistics') {
-  require 'sirb/scalar_statistics'
-  include Sirb::ScalarStatistics
+Loader.add_lib('general statistics') {
+  require 'sirb/general_statistics'
+  include Sirb::GeneralStatistics
 }
 Loader.add_lib('enumerable statistics') {
   require 'sirb/enumerable_statistics'
@@ -30,6 +33,10 @@ Loader.add_lib('enumerable statistics') {
     include Sirb::EnumerableStatistics
   end
   # TODO: Add other enumerables, adapt for Matrices, Vectors, graphs, the whole thing.
+
+  require 'sirb/inter_enumerable_statistics'
+  include Sirb::InterEnumerableStatistics
+  
 }
 
 puts Loader.to_s

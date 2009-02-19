@@ -1,52 +1,4 @@
 module Sirb #:nodoc:
-  # These are general methods for comparing enumerables.
-  module InterEnumerableStatistics #:nodoc:
-    
-    include ScalarStatistics
-    
-    # This may be completely off!!  Write the tests!
-    def old_correlation(x, y)
-      n = min(x.size, y.size)
-      sx = x.std
-      sy = y.std
-      xm = x.mean
-      ym = y.mean
-      (0...n).inject(0.0) { |sum, i| sum += (x[i] - xm) * (y[i] - ym) } / (n - 1) * sx * sy
-    end
-    
-
-    # This is still jacked.  I need some time to figure out what i'm doing here.
-    def correlation(x, y)
-      n = min(x.size, y.size)
-      sx = x.std
-      sy = y.std
-      xm = x.mean
-      ym = y.mean
-      (0...n).inject(0.0) { |sum, i| 
-        # puts 'aaaaaaaaaaaaaa', 
-        #   'sum', sum,
-        #   'inner', (x[i] * y[i]) - (xm * ym),
-        #   'xi', x[i],
-        #   'yi', y[i], 
-        #   'xi * yi', x[i] * y[i], 
-        #   'xm * ym', xm * ym, 
-        #   'bbbbbbbbbbbbbbbb'
-        sum += (x[i] * y[i]) - (xm * ym) 
-        } / n
-    end
-    
-    alias :cor :correlation
-    
-    def p_max(*enums)
-      n = min(*enums.map{ |x| x.size} )
-      (0...n).map { |i| max(*enums.map{ |x| x[i] }) }
-    end
-    
-    def p_min(*enums)
-      n = min(*enums.map{ |x| x.size} )
-      (0...n).map { |i| min(*enums.map{ |x| x[i] }) }
-    end
-  end
 
   # These are the standard R vector functions that I want to add to any
   # Enumerable class for Ruby.  I started by borrowing heavily from
@@ -79,7 +31,7 @@ module Sirb #:nodoc:
   module EnumerableStatistics
 
     # There are issues with this...
-    include ScalarStatistics      
+    include GeneralStatistics      
 
     def self.append_features(mod)
       
@@ -87,16 +39,16 @@ module Sirb #:nodoc:
       alias :original_min :min
       
       unless mod < Enumerable
-      	raise TypeError, 
-      	  "`#{self}' can't be included non Enumerable (#{mod})"
+        raise TypeError, 
+          "`#{self}' can't be included non Enumerable (#{mod})"
       end
 
       def mod.default_block= (block)
-      	self.const_set("STAT_BLOCK", block)
+        self.const_set("STAT_BLOCK", block)
       end
 
       def mod.default_block
-      	defined?(self::STAT_BLOCK) && self::STAT_BLOCK
+        defined?(self::STAT_BLOCK) && self::STAT_BLOCK
       end
 
       super
@@ -129,14 +81,15 @@ module Sirb #:nodoc:
     alias :avg :average
 
     def variance(&block)
-      sum2 = if block_given?
-        sum{|i| j=yield(i); j*j}
+      m = mean(&block)
+      sum_of_differences = if block_given?
+        sum{ |i| j=yield(i); (m - j) ** 2 }
       elsif default_block
-        sum{|i| j=default_block[*i]; j*j}
+        sum{ |i| j=default_block[*i]; (m - j) ** 2 }
       else
-        sum{|i| i**2}
+        sum{ |i| (m - i) ** 2 }
       end
-      sum2/size - average(&block)**2
+      sum_of_differences / (size - 1)
     end
     alias :var :variance
 
@@ -145,52 +98,26 @@ module Sirb #:nodoc:
     end
     alias :std :standard_deviation
 
-    def Min(&block)
-      if block_given?
-        if min = find{|i| i}
-          min = yield(min)
-          each{|i|
-            j = yield(i)
-            min = j if min > j
-          }
-          min
-        end
-        elsif default_block
-          if min = find{|i| i}
-            min = default_block[*min]
-            each{|i|
-              j = default_block[*i]
-              min = j if min > j
-            }
-            min
-          end
-        else
-          original_min()
-      end
-    end
-
-    def Max(&block)
-      if block_given?
-        if max = find{|i| i}
-          max = yield(max)
-          each{|i|
-            j = yield(i)
-            max = j if max < j
-          }
-          max
-        end
+    def min(&block)
+      list = if block_given?
+        map{|x| yield(x) }
       elsif default_block
-        if max = find{|i| i}
-          max = default_block[*max]
-          each{|i|
-            j = default_block[*i]
-            max = j if max > j
-          }
-          max
-        end
+        map{|x| default_block[*x] }
       else
-        original_max()
+        self
       end
+      Object.min(*list)
+    end
+    
+    def max
+      list = if block_given?
+        map{|x| yield(x) }
+      elsif default_block
+        map{|x| default_block[*x] }
+      else
+        self
+      end
+      Object.max(*list)
     end
     
     # The slow way is to iterate up to the middle point.  A faster way is to
@@ -199,12 +126,16 @@ module Sirb #:nodoc:
     def median(&block)
       return iterate_midway(&block) if block_given?
       begin
-        midpoint = size.div(2)
+        mid1 = size.div(2)
+        mid2 = (size % 2 == 0) ? size.div(2) : (size / 2.0).ceil
         # I don't pass the block to the sort, because a sort block needs to look
         # something like: {|x,y| x <=> y}.  To get around this, set the default 
         # block on the object.
         sorted = new_sort
-        sorted[midpoint]
+        med1 = sorted[mid1]
+        med2 = sorted[mid2]
+        puts 'aaaaaaaaaaaaa', mid1, mid2
+        (med1 + med2) / 2
       rescue
         iterate_midway(&block)
       end
@@ -212,32 +143,38 @@ module Sirb #:nodoc:
     
     # An iterative version of median
     def iterate_midway(&block)
-      midpoint, last_value, j = size.div(2), nil, 0
+      mid1, mid2, last_value, j = size.div(2), (size / 2.0).ceil, nil, 0
       # I don't pass the block to the sort, because a sort block needs to look
       # something like: {|x,y| x <=> y}.  To get around this, set the default 
       # block on the object.
-      sorted = new_sort
+      sorted, sort1, sort2 = new_sort, nil, nil
 
       if block_given?
         sorted.each do |i|
           last_value = yield(i)
           j += 1
-          break if j >= midpoint
+          sort1 = last_value if j == mid1
+          sort2 = last_value if j == mid2
+          break if j >= mid2
         end
       elsif default_block
         sorted.each do |i|
           last_value = default_block[*i]
           j += 1
-          break if j >= midpoint
+          sort1 = last_value if j == mid1
+          sort2 = last_value if j == mid2
+          break if j >= mid2
         end
       else
         sorted.each do |i|
-          j += 1
-          break if j >= midpoint
           last_value = i
+          sort1 = last_value if j == mid1
+          sort2 = last_value if j == mid2
+          j += 1
+          break if j >= mid2
         end
       end
-      return last_value
+      return (med1 + med2) / 2
     end
     protected :iterate_midway
     

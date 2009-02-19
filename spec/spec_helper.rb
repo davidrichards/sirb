@@ -1,5 +1,7 @@
-require File.expand_path(File.dirname(__FILE__) + "/../lib/statisticus")
+require File.expand_path(File.dirname(__FILE__) + "/../lib/sirb")
 require 'spec'
+
+include Sirb
 
 Spec::Runner.configure do |config|
   # == Mock Framework
