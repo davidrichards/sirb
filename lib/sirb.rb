@@ -37,6 +37,9 @@ Loader.add_lib('enumerable statistics') {
   require 'sirb/inter_enumerable_statistics'
   include Sirb::InterEnumerableStatistics
   
+  require 'sirb/functional'
+  require 'sirb/unbound_method'
+  
 }
 
 puts Loader.to_s

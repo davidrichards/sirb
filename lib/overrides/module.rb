@@ -33,6 +33,16 @@ class Module
     new_name ||= ("original_" + target.to_s).to_sym
     begin
       alias_method(new_name, target)
+      
+      case
+        when public_method_defined?(target)
+          public new_name
+        when protected_method_defined?(target)
+          protected new_name
+        when private_method_defined?(target)
+          private new_name
+      end
+      
       remove_method(target)
     rescue
       # The instance_methods show that the soon-to-be-defined methods are
@@ -41,4 +51,12 @@ class Module
     end
   end
   
+  # Access instance methods with array notation. Returns UnboundMethod,
+  alias [] instance_method
+
+  # Define a instance method with name sym and body f.
+  # Example: String[:backwards] = lambda { reverse }
+  def []=(sym, f)
+    self.instance_eval { define_method(sym, f) }
+  end
 end

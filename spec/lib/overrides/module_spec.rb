@@ -24,6 +24,7 @@ describe Module do
     a = A.new
     a.methods.should_not be_include('go')
     a.methods.should_not be_include('original_go')
+
     class A
       def go
         'go'
@@ -39,6 +40,7 @@ describe Module do
     a.go.should eql('a new go')
     a.original_go.should eql('go')
     Object.send(:remove_const, :A)
+
     class A
       def go
         'go'
@@ -49,5 +51,28 @@ describe Module do
     a.methods.should_not be_include('go')
     a.methods.should be_include('different_name')
     a.different_name.should eql('go')
+    Object.send(:remove_const, :A)
+
+    class A
+      def go
+        'go'
+      end
+      private :go
+      archive_method(:go, :private_go)
+    end
+    a = A.new
+    a.methods.should_not be_include('go')
+    a.private_methods.should be_include('private_go')
+    a.send(:private_go).should eql('go')
+    Object.send(:remove_const, :A)
+  end
+  
+  it "should have [] aliased for instance_method" do
+    String[:reverse].bind("hello").call.should eql("olleh")
+  end
+  
+  it "should have []= setup to define an instance method" do
+    String[:backwards] = lambda { reverse }
+    "david".backwards.should eql('divad')
   end
 end

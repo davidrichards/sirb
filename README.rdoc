@@ -130,7 +130,7 @@ I only mix this into Array right now.  I need to work through the various other 
 
 == INSTALL:
 
-* sudo gem install drichards-sirb
+* sudo gem install davidrichards-sirb
 
 == LICENSE:
 
