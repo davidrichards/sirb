@@ -1,0 +1,1166 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Module: Sirb::EnumerableStatistics</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Module</strong></td>
+          <td class="class-name-in-header">Sirb::EnumerableStatistics</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../files/lib/sirb/enumerable_statistics_rb.html">
+                lib/sirb/enumerable_statistics.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+These are the standard R vector functions that I want to add to any
+Enumerable class for Ruby. I started by borrowing heavily from
+Gotoken&#8217; math/statistics project (<a
+href="http://raa.ruby-lang.org/project/math-statistics">raa.ruby-lang.org/project/math-statistics</a>/).
+There were a few changes that don&#8216;t make sense in the idiomatic Ruby
+that I now use (a few things have changed since 2001).
+</p>
+<p>
+The following is a table of values from R to my methods
+</p>
+<p>
+<a href="EnumerableStatistics.html#M000059">max</a> | <a
+href="EnumerableStatistics.html#M000059">max</a> <a
+href="EnumerableStatistics.html#M000058">min</a> | <a
+href="EnumerableStatistics.html#M000058">min</a> <a
+href="EnumerableStatistics.html#M000050">sum</a> | <a
+href="EnumerableStatistics.html#M000050">sum</a> <a
+href="EnumerableStatistics.html#M000052">mean</a> | <a
+href="EnumerableStatistics.html#M000052">mean</a> <a
+href="EnumerableStatistics.html#M000060">median</a> | <a
+href="EnumerableStatistics.html#M000060">median</a> <a
+href="EnumerableStatistics.html#M000066">range</a> | <a
+href="EnumerableStatistics.html#M000066">range</a> <a
+href="EnumerableStatistics.html#M000055">var</a> | <a
+href="EnumerableStatistics.html#M000055">var</a> <a
+href="EnumerableStatistics.html#M000054">variance</a> cor | cor correlation
+sort | sort <a href="EnumerableStatistics.html#M000071">rank</a> | <a
+href="EnumerableStatistics.html#M000071">rank</a> <a
+href="EnumerableStatistics.html#M000072">order</a> | <a
+href="EnumerableStatistics.html#M000072">order</a> <a
+href="EnumerableStatistics.html#M000073">quantile</a> | <a
+href="EnumerableStatistics.html#M000073">quantile</a> cumsum | <a
+href="EnumerableStatistics.html#M000074">cum_sum</a> <a
+href="EnumerableStatistics.html#M000075">cumulative_sum</a> cumprod | <a
+href="EnumerableStatistics.html#M000076">cum_prod</a> <a
+href="EnumerableStatistics.html#M000077">cumulative_product</a> cummax | <a
+href="EnumerableStatistics.html#M000078">cum_max</a> <a
+href="EnumerableStatistics.html#M000079">cumulative_max</a> cummin | <a
+href="EnumerableStatistics.html#M000080">cum_min</a> <a
+href="EnumerableStatistics.html#M000081">cumulative_min</a> pmax | p_max
+pmin | p_min
+</p>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000047">append_features</a>&nbsp;&nbsp;
+      <a href="#M000051">average</a>&nbsp;&nbsp;
+      <a href="#M000053">avg</a>&nbsp;&nbsp;
+      <a href="#M000078">cum_max</a>&nbsp;&nbsp;
+      <a href="#M000080">cum_min</a>&nbsp;&nbsp;
+      <a href="#M000076">cum_prod</a>&nbsp;&nbsp;
+      <a href="#M000074">cum_sum</a>&nbsp;&nbsp;
+      <a href="#M000079">cumulative_max</a>&nbsp;&nbsp;
+      <a href="#M000081">cumulative_min</a>&nbsp;&nbsp;
+      <a href="#M000077">cumulative_product</a>&nbsp;&nbsp;
+      <a href="#M000075">cumulative_sum</a>&nbsp;&nbsp;
+      <a href="#M000048">default_block</a>&nbsp;&nbsp;
+      <a href="#M000049">default_block=</a>&nbsp;&nbsp;
+      <a href="#M000063">first_half</a>&nbsp;&nbsp;
+      <a href="#M000065">iterate_midway</a>&nbsp;&nbsp;
+      <a href="#M000059">max</a>&nbsp;&nbsp;
+      <a href="#M000052">mean</a>&nbsp;&nbsp;
+      <a href="#M000060">median</a>&nbsp;&nbsp;
+      <a href="#M000062">median_position</a>&nbsp;&nbsp;
+      <a href="#M000061">middle_two</a>&nbsp;&nbsp;
+      <a href="#M000058">min</a>&nbsp;&nbsp;
+      <a href="#M000070">new_sort</a>&nbsp;&nbsp;
+      <a href="#M000072">order</a>&nbsp;&nbsp;
+      <a href="#M000073">quantile</a>&nbsp;&nbsp;
+      <a href="#M000066">range</a>&nbsp;&nbsp;
+      <a href="#M000069">range_as_range</a>&nbsp;&nbsp;
+      <a href="#M000068">range_class</a>&nbsp;&nbsp;
+      <a href="#M000067">range_class=</a>&nbsp;&nbsp;
+      <a href="#M000071">rank</a>&nbsp;&nbsp;
+      <a href="#M000064">second_half</a>&nbsp;&nbsp;
+      <a href="#M000056">standard_deviation</a>&nbsp;&nbsp;
+      <a href="#M000057">std</a>&nbsp;&nbsp;
+      <a href="#M000050">sum</a>&nbsp;&nbsp;
+      <a href="#M000055">var</a>&nbsp;&nbsp;
+      <a href="#M000054">variance</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+    <div id="includes">
+      <h3 class="section-bar">Included Modules</h3>
+
+      <div id="includes-list">
+        <span class="include-name">GeneralStatistics</span>
+      </div>
+    </div>
+
+    <div id="section">
+
+
+
+    <div id="aliases-list">
+      <h3 class="section-bar">External Aliases</h3>
+
+      <div class="name-list">
+                        <table summary="aliases">
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">max</td>
+          <td>-&gt;</td>
+          <td class="context-item-value">original_max</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">min</td>
+          <td>-&gt;</td>
+          <td class="context-item-value">original_min</td>
+        </tr>
+                        </table>
+      </div>
+    </div>
+
+
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Class methods</h3>
+
+      <div id="method-M000047" class="method-detail">
+        <a name="M000047"></a>
+
+        <div class="method-heading">
+          <a href="#M000047" class="method-signature">
+          <span class="method-name">append_features</span><span class="method-args">(mod)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000047-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000047-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 36</span>
+36:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">append_features</span>(<span class="ruby-identifier">mod</span>)
+37:       
+38:       <span class="ruby-keyword kw">alias</span> <span class="ruby-identifier">:original_max</span> <span class="ruby-identifier">:max</span>
+39:       <span class="ruby-keyword kw">alias</span> <span class="ruby-identifier">:original_min</span> <span class="ruby-identifier">:min</span>
+40:       
+41:       <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">mod</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">Enumerable</span>
+42:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">TypeError</span>, 
+43:           <span class="ruby-node">&quot;`#{self}' can't be included non Enumerable (#{mod})&quot;</span>
+44:       <span class="ruby-keyword kw">end</span>
+45: 
+46:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">mod</span>.<span class="ruby-identifier">default_block=</span> (<span class="ruby-identifier">block</span>)
+47:         <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">const_set</span>(<span class="ruby-value str">&quot;STAT_BLOCK&quot;</span>, <span class="ruby-identifier">block</span>)
+48:       <span class="ruby-keyword kw">end</span>
+49: 
+50:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">mod</span>.<span class="ruby-identifier">default_block</span>
+51:         <span class="ruby-keyword kw">defined?</span>(<span class="ruby-keyword kw">self</span><span class="ruby-operator">::</span><span class="ruby-constant">STAT_BLOCK</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword kw">self</span><span class="ruby-operator">::</span><span class="ruby-constant">STAT_BLOCK</span>
+52:       <span class="ruby-keyword kw">end</span>
+53: 
+54:       <span class="ruby-keyword kw">super</span>
+55:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000051" class="method-detail">
+        <a name="M000051"></a>
+
+        <div class="method-heading">
+          <a href="#M000051" class="method-signature">
+          <span class="method-name">average</span><span class="method-args">(&amp;block)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000051-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000051-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 77</span>
+77:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">average</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+78:       <span class="ruby-identifier">sum</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)<span class="ruby-operator">/</span><span class="ruby-identifier">size</span>
+79:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000053" class="method-detail">
+        <a name="M000053"></a>
+
+        <div class="method-heading">
+          <span class="method-name">avg</span><span class="method-args">(&amp;block)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="EnumerableStatistics.html#M000051">average</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000078" class="method-detail">
+        <a name="M000078"></a>
+
+        <div class="method-heading">
+          <a href="#M000078" class="method-signature">
+          <span class="method-name">cum_max</span><span class="method-args">() {|i| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000078-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000078-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 316</span>
+316:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">cum_max</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+317:       <span class="ruby-identifier">current_max</span> = <span class="ruby-keyword kw">nil</span>
+318:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+319:         <span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">current_max</span> = <span class="ruby-constant">Object</span>.<span class="ruby-identifier">max</span>(<span class="ruby-identifier">current_max</span>, <span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">i</span>)) }
+320:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">default_block</span>
+321:         <span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">current_max</span> = <span class="ruby-constant">Object</span>.<span class="ruby-identifier">max</span>(<span class="ruby-identifier">current_max</span>, <span class="ruby-identifier">default_block</span>[<span class="ruby-operator">*</span><span class="ruby-identifier">i</span>]) }
+322:       <span class="ruby-keyword kw">else</span>
+323:         <span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">current_max</span> = <span class="ruby-constant">Object</span>.<span class="ruby-identifier">max</span>(<span class="ruby-identifier">current_max</span>, <span class="ruby-identifier">i</span>) }
+324:       <span class="ruby-keyword kw">end</span>
+325:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000080" class="method-detail">
+        <a name="M000080"></a>
+
+        <div class="method-heading">
+          <a href="#M000080" class="method-signature">
+          <span class="method-name">cum_min</span><span class="method-args">() {|i| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000080-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000080-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 328</span>
+328:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">cum_min</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+329:       <span class="ruby-identifier">current_min</span> = <span class="ruby-keyword kw">nil</span>
+330:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+331:         <span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">current_min</span> = <span class="ruby-constant">Object</span>.<span class="ruby-identifier">min</span>(<span class="ruby-identifier">current_min</span>, <span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">i</span>)) }
+332:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">default_block</span>
+333:         <span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">current_min</span> = <span class="ruby-constant">Object</span>.<span class="ruby-identifier">min</span>(<span class="ruby-identifier">current_min</span>, <span class="ruby-identifier">default_block</span>[<span class="ruby-operator">*</span><span class="ruby-identifier">i</span>]) }
+334:       <span class="ruby-keyword kw">else</span>
+335:         <span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">current_min</span> = <span class="ruby-constant">Object</span>.<span class="ruby-identifier">min</span>(<span class="ruby-identifier">current_min</span>, <span class="ruby-identifier">i</span>) }
+336:       <span class="ruby-keyword kw">end</span>
+337:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000076" class="method-detail">
+        <a name="M000076"></a>
+
+        <div class="method-heading">
+          <a href="#M000076" class="method-signature">
+          <span class="method-name">cum_prod</span><span class="method-args">(sorted=false) {|i| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000076-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000076-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 303</span>
+303:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">cum_prod</span>(<span class="ruby-identifier">sorted</span>=<span class="ruby-keyword kw">false</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+304:       <span class="ruby-identifier">prod</span> = <span class="ruby-value">1.0</span>
+305:       <span class="ruby-identifier">obj</span> = <span class="ruby-identifier">sorted</span> <span class="ruby-value">? </span><span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">new_sort</span> <span class="ruby-operator">:</span> <span class="ruby-keyword kw">self</span>
+306:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+307:         <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">prod</span> <span class="ruby-operator">*=</span> <span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">i</span>) }
+308:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">default_block</span>
+309:         <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">prod</span> <span class="ruby-operator">*=</span> <span class="ruby-identifier">default_block</span>[<span class="ruby-operator">*</span><span class="ruby-identifier">i</span>] }
+310:       <span class="ruby-keyword kw">else</span>
+311:         <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">prod</span> <span class="ruby-operator">*=</span> <span class="ruby-identifier">i</span> }
+312:       <span class="ruby-keyword kw">end</span>
+313:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000074" class="method-detail">
+        <a name="M000074"></a>
+
+        <div class="method-heading">
+          <a href="#M000074" class="method-signature">
+          <span class="method-name">cum_sum</span><span class="method-args">(sorted=false) {|i| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000074-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000074-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 290</span>
+290:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">cum_sum</span>(<span class="ruby-identifier">sorted</span>=<span class="ruby-keyword kw">false</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+291:       <span class="ruby-identifier">sum</span> = <span class="ruby-value">0</span><span class="ruby-value">.0</span>
+292:       <span class="ruby-identifier">obj</span> = <span class="ruby-identifier">sorted</span> <span class="ruby-value">? </span><span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">new_sort</span> <span class="ruby-operator">:</span> <span class="ruby-keyword kw">self</span>
+293:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+294:         <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sum</span> <span class="ruby-operator">+=</span> <span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">i</span>) }
+295:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">default_block</span>
+296:         <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sum</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">default_block</span>[<span class="ruby-operator">*</span><span class="ruby-identifier">i</span>] }
+297:       <span class="ruby-keyword kw">else</span>
+298:         <span class="ruby-identifier">obj</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sum</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">i</span> }
+299:       <span class="ruby-keyword kw">end</span>
+300:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000079" class="method-detail">
+        <a name="M000079"></a>
+
+        <div class="method-heading">
+          <span class="method-name">cumulative_max</span><span class="method-args">(&amp;block)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="EnumerableStatistics.html#M000078">cum_max</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000081" class="method-detail">
+        <a name="M000081"></a>
+
+        <div class="method-heading">
+          <span class="method-name">cumulative_min</span><span class="method-args">(&amp;block)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="EnumerableStatistics.html#M000080">cum_min</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000077" class="method-detail">
+        <a name="M000077"></a>
+
+        <div class="method-heading">
+          <span class="method-name">cumulative_product</span><span class="method-args">(sorted=false, &amp;block)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="EnumerableStatistics.html#M000076">cum_prod</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000075" class="method-detail">
+        <a name="M000075"></a>
+
+        <div class="method-heading">
+          <span class="method-name">cumulative_sum</span><span class="method-args">(sorted=false, &amp;block)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="EnumerableStatistics.html#M000074">cum_sum</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000048" class="method-detail">
+        <a name="M000048"></a>
+
+        <div class="method-heading">
+          <a href="#M000048" class="method-signature">
+          <span class="method-name">default_block</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000048-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000048-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 57</span>
+57:     <span class="ruby-keyword kw">def</span>   <span class="ruby-identifier">default_block</span><span class="ruby-identifier">default_block</span><span class="ruby-identifier">default_block</span>
+58:       <span class="ruby-ivar">@stat_block</span> <span class="ruby-operator">||</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">default_block</span>
+59:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000049" class="method-detail">
+        <a name="M000049"></a>
+
+        <div class="method-heading">
+          <a href="#M000049" class="method-signature">
+          <span class="method-name">default_block=</span><span class="method-args">(block)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000049-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000049-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 61</span>
+61:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">default_block=</span>(<span class="ruby-identifier">block</span>)
+62:       <span class="ruby-ivar">@stat_block</span> = <span class="ruby-identifier">block</span>
+63:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000059" class="method-detail">
+        <a name="M000059"></a>
+
+        <div class="method-heading">
+          <a href="#M000059" class="method-signature">
+          <span class="method-name">max</span><span class="method-args">() {|x| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000059-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000059-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 112</span>
+112:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">max</span>
+113:       <span class="ruby-identifier">list</span> = <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+114:         <span class="ruby-identifier">map</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">x</span>) }
+115:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">default_block</span>
+116:         <span class="ruby-identifier">map</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">default_block</span>[<span class="ruby-operator">*</span><span class="ruby-identifier">x</span>] }
+117:       <span class="ruby-keyword kw">else</span>
+118:         <span class="ruby-keyword kw">self</span>
+119:       <span class="ruby-keyword kw">end</span>
+120:       <span class="ruby-constant">Object</span>.<span class="ruby-identifier">max</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">list</span>)
+121:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000052" class="method-detail">
+        <a name="M000052"></a>
+
+        <div class="method-heading">
+          <span class="method-name">mean</span><span class="method-args">(&amp;block)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="EnumerableStatistics.html#M000051">average</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000060" class="method-detail">
+        <a name="M000060"></a>
+
+        <div class="method-heading">
+          <a href="#M000060" class="method-signature">
+          <span class="method-name">median</span><span class="method-args">(ratio=0.5, &amp;block)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+The slow way is to iterate up to the middle point. A faster way is to use
+the index, when available. If a block is supplied, always iterate to the
+middle point.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000060-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000060-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 126</span>
+126:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">median</span>(<span class="ruby-identifier">ratio</span>=<span class="ruby-value">0</span><span class="ruby-value">.5</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+127:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">iterate_midway</span>(<span class="ruby-identifier">ratio</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+128:       <span class="ruby-keyword kw">begin</span>
+129:         <span class="ruby-identifier">mid1</span>, <span class="ruby-identifier">mid2</span> = <span class="ruby-identifier">middle_two</span>
+130:         <span class="ruby-identifier">sorted</span> = <span class="ruby-identifier">new_sort</span>
+131:         <span class="ruby-identifier">med1</span>, <span class="ruby-identifier">med2</span> = <span class="ruby-identifier">sorted</span>[<span class="ruby-identifier">mid1</span>], <span class="ruby-identifier">sorted</span>[<span class="ruby-identifier">mid2</span>]
+132:         <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">med1</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">med1</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">med2</span>
+133:         <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">med1</span> <span class="ruby-operator">+</span> ((<span class="ruby-identifier">med2</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">med1</span>) <span class="ruby-operator">*</span> <span class="ruby-identifier">ratio</span>)
+134:       <span class="ruby-keyword kw">rescue</span>
+135:         <span class="ruby-identifier">iterate_midway</span>(<span class="ruby-identifier">ratio</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+136:       <span class="ruby-keyword kw">end</span>
+137:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000058" class="method-detail">
+        <a name="M000058"></a>
+
+        <div class="method-heading">
+          <a href="#M000058" class="method-signature">
+          <span class="method-name">min</span><span class="method-args">() {|x| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000058-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000058-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 101</span>
+101:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">min</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+102:       <span class="ruby-identifier">list</span> = <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+103:         <span class="ruby-identifier">map</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">x</span>) }
+104:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">default_block</span>
+105:         <span class="ruby-identifier">map</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">default_block</span>[<span class="ruby-operator">*</span><span class="ruby-identifier">x</span>] }
+106:       <span class="ruby-keyword kw">else</span>
+107:         <span class="ruby-keyword kw">self</span>
+108:       <span class="ruby-keyword kw">end</span>
+109:       <span class="ruby-constant">Object</span>.<span class="ruby-identifier">min</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">list</span>)
+110:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000070" class="method-detail">
+        <a name="M000070"></a>
+
+        <div class="method-heading">
+          <a href="#M000070" class="method-signature">
+          <span class="method-name">new_sort</span><span class="method-args">() {|i| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+I don&#8216;t pass the block to the sort, because a sort block needs to
+look something like: {|x,y| x &lt;=&gt; y}. To get around this, set the
+default block on the object.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000070-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000070-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 219</span>
+219:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">new_sort</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+220:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+221:         <span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">i</span>) }.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">dup</span>
+222:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">default_block</span>
+223:         <span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">default_block</span>[<span class="ruby-operator">*</span><span class="ruby-identifier">i</span>] }.<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">dup</span>
+224:       <span class="ruby-keyword kw">else</span>
+225:         <span class="ruby-identifier">sort</span>().<span class="ruby-identifier">dup</span>
+226:       <span class="ruby-keyword kw">end</span>
+227:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000072" class="method-detail">
+        <a name="M000072"></a>
+
+        <div class="method-heading">
+          <a href="#M000072" class="method-signature">
+          <span class="method-name">order</span><span class="method-args">(&amp;block)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Given values like [10,5,5,1] Rank should produce something like [4,2,2,1]
+And <a href="EnumerableStatistics.html#M000072">order</a> should produce
+something like [4,2,3,1] The trick is that <a
+href="EnumerableStatistics.html#M000071">rank</a> skips as many as were
+duplicated, so there could not be a 3 in the <a
+href="EnumerableStatistics.html#M000071">rank</a> from the example above.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000072-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000072-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 249</span>
+249:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">order</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+250:       <span class="ruby-identifier">hold</span>= []
+251:       <span class="ruby-identifier">rank</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>).<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">x</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+252:         <span class="ruby-identifier">j</span> = <span class="ruby-identifier">i</span>
+253:         <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">hold</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">j</span>) <span class="ruby-keyword kw">do</span>
+254:           <span class="ruby-identifier">j</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+255:         <span class="ruby-keyword kw">end</span>
+256:         <span class="ruby-identifier">hold</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">j</span>
+257:       <span class="ruby-keyword kw">end</span>
+258:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000073" class="method-detail">
+        <a name="M000073"></a>
+
+        <div class="method-heading">
+          <a href="#M000073" class="method-signature">
+          <span class="method-name">quantile</span><span class="method-args">(&amp;block)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+First quartile: nth_split_by_m(1, 4) Third quartile: nth_split_by_m(3, 4)
+Median: nth_split_by_m(1, 2) Doesn&#8216;t match R, and it&#8216;s silly to
+try to. def nth_split_by_m(n, m)
+</p>
+<pre>
+  sorted  = new_sort
+  dividers = m - 1
+  if size % m == dividers # Divides evenly
+    # Because we have a 0-based list, we get the floor
+    i = ((size / m.to_f) * n).floor
+    j = i
+  else
+    # This reflects R's approach, which I don't think I agree with.
+    i = (((size / m.to_f) * n) - 1)
+    i = i &gt; (size / m.to_f) ? i.floor : i.ceil
+    j = i + 1
+  end
+  sorted[i] + ((n / m.to_f) * (sorted[j] - sorted[i]))
+</pre>
+<p>
+end
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000073-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000073-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 280</span>
+280:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">quantile</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+281:       [
+282:         <span class="ruby-identifier">min</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>), 
+283:         <span class="ruby-identifier">first_half</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>).<span class="ruby-identifier">median</span>(<span class="ruby-value">0</span><span class="ruby-value">.25</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>), 
+284:         <span class="ruby-identifier">median</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>), 
+285:         <span class="ruby-identifier">second_half</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>).<span class="ruby-identifier">median</span>(<span class="ruby-value">0</span><span class="ruby-value">.75</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>), 
+286:         <span class="ruby-identifier">max</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+287:       ]
+288:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000066" class="method-detail">
+        <a name="M000066"></a>
+
+        <div class="method-heading">
+          <a href="#M000066" class="method-signature">
+          <span class="method-name">range</span><span class="method-args">(&amp;block)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Just an array of [<a href="EnumerableStatistics.html#M000058">min</a>, <a
+href="EnumerableStatistics.html#M000059">max</a>] to comply with R uses of
+the work. Use <a
+href="EnumerableStatistics.html#M000069">range_as_range</a> if you want a
+real Range.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000066-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000066-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 199</span>
+199:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">range</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+200:       [<span class="ruby-identifier">min</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>), <span class="ruby-identifier">max</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)]
+201:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000069" class="method-detail">
+        <a name="M000069"></a>
+
+        <div class="method-heading">
+          <a href="#M000069" class="method-signature">
+          <span class="method-name">range_as_range</span><span class="method-args">(&amp;block)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000069-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000069-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 212</span>
+212:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">range_as_range</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+213:       <span class="ruby-identifier">range_class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">min</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>), <span class="ruby-identifier">max</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>))
+214:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000068" class="method-detail">
+        <a name="M000068"></a>
+
+        <div class="method-heading">
+          <a href="#M000068" class="method-signature">
+          <span class="method-name">range_class</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000068-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000068-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 208</span>
+208:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">range_class</span>
+209:       <span class="ruby-ivar">@range_class</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Range</span>
+210:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000067" class="method-detail">
+        <a name="M000067"></a>
+
+        <div class="method-heading">
+          <a href="#M000067" class="method-signature">
+          <span class="method-name">range_class=</span><span class="method-args">(klass)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Useful for setting a real <a
+href="EnumerableStatistics.html#M000066">range</a> class (FixedRange).
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000067-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000067-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 204</span>
+204:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">range_class=</span>(<span class="ruby-identifier">klass</span>)
+205:       <span class="ruby-ivar">@range_class</span> = <span class="ruby-identifier">klass</span>
+206:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000071" class="method-detail">
+        <a name="M000071"></a>
+
+        <div class="method-heading">
+          <a href="#M000071" class="method-signature">
+          <span class="method-name">rank</span><span class="method-args">() {|i| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Doesn&#8216;t overwrite things like Matrix#rank
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000071-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000071-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 230</span>
+230:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">rank</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+231: 
+232:       <span class="ruby-identifier">sorted</span> = <span class="ruby-identifier">new_sort</span>
+233: 
+234:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+235:         <span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sorted</span>.<span class="ruby-identifier">index</span>(<span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">i</span>)) <span class="ruby-operator">+</span> <span class="ruby-value">1</span> }
+236:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">default_block</span>
+237:         <span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sorted</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">default_block</span>[<span class="ruby-operator">*</span><span class="ruby-identifier">i</span>]) <span class="ruby-operator">+</span> <span class="ruby-value">1</span> }
+238:       <span class="ruby-keyword kw">else</span>
+239:         <span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sorted</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">i</span>) <span class="ruby-operator">+</span> <span class="ruby-value">1</span> }
+240:       <span class="ruby-keyword kw">end</span>
+241: 
+242:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000056" class="method-detail">
+        <a name="M000056"></a>
+
+        <div class="method-heading">
+          <a href="#M000056" class="method-signature">
+          <span class="method-name">standard_deviation</span><span class="method-args">(&amp;block)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000056-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000056-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 96</span>
+96:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">standard_deviation</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+97:       <span class="ruby-constant">Math</span><span class="ruby-operator">::</span><span class="ruby-identifier">sqrt</span>(<span class="ruby-identifier">variance</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>))
+98:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000057" class="method-detail">
+        <a name="M000057"></a>
+
+        <div class="method-heading">
+          <span class="method-name">std</span><span class="method-args">(&amp;block)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a
+href="EnumerableStatistics.html#M000056">standard_deviation</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000050" class="method-detail">
+        <a name="M000050"></a>
+
+        <div class="method-heading">
+          <a href="#M000050" class="method-signature">
+          <span class="method-name">sum</span><span class="method-args">() {|i| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000050-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000050-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 65</span>
+65:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sum</span>
+66:       <span class="ruby-identifier">sum</span> = <span class="ruby-value">0</span><span class="ruby-value">.0</span>
+67:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+68:         <span class="ruby-identifier">each</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sum</span> <span class="ruby-operator">+=</span> <span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">i</span>)}
+69:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">default_block</span>
+70:         <span class="ruby-identifier">each</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sum</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">default_block</span>[<span class="ruby-operator">*</span><span class="ruby-identifier">i</span>]}
+71:       <span class="ruby-keyword kw">else</span>
+72:         <span class="ruby-identifier">each</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sum</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">i</span>}
+73:       <span class="ruby-keyword kw">end</span>
+74:       <span class="ruby-identifier">sum</span>
+75:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000055" class="method-detail">
+        <a name="M000055"></a>
+
+        <div class="method-heading">
+          <span class="method-name">var</span><span class="method-args">(&amp;block)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="EnumerableStatistics.html#M000054">variance</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000054" class="method-detail">
+        <a name="M000054"></a>
+
+        <div class="method-heading">
+          <a href="#M000054" class="method-signature">
+          <span class="method-name">variance</span><span class="method-args">() {|i| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000054-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000054-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 83</span>
+83:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">variance</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+84:       <span class="ruby-identifier">m</span> = <span class="ruby-identifier">mean</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+85:       <span class="ruby-identifier">sum_of_differences</span> = <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+86:         <span class="ruby-identifier">sum</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">j</span>=<span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">i</span>); (<span class="ruby-identifier">m</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">j</span>) <span class="ruby-operator">**</span> <span class="ruby-value">2</span> }
+87:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">default_block</span>
+88:         <span class="ruby-identifier">sum</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">j</span>=<span class="ruby-identifier">default_block</span>[<span class="ruby-operator">*</span><span class="ruby-identifier">i</span>]; (<span class="ruby-identifier">m</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">j</span>) <span class="ruby-operator">**</span> <span class="ruby-value">2</span> }
+89:       <span class="ruby-keyword kw">else</span>
+90:         <span class="ruby-identifier">sum</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> (<span class="ruby-identifier">m</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">i</span>) <span class="ruby-operator">**</span> <span class="ruby-value">2</span> }
+91:       <span class="ruby-keyword kw">end</span>
+92:       <span class="ruby-identifier">sum_of_differences</span> <span class="ruby-operator">/</span> (<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>)
+93:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="section-bar">Protected Instance methods</h3>
+
+      <div id="method-M000063" class="method-detail">
+        <a name="M000063"></a>
+
+        <div class="method-heading">
+          <a href="#M000063" class="method-signature">
+          <span class="method-name">first_half</span><span class="method-args">(&amp;block)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000063-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000063-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 151</span>
+151:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">first_half</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+152:       <span class="ruby-identifier">fh</span> = <span class="ruby-keyword kw">self</span>[<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-identifier">median_position</span>].<span class="ruby-identifier">dup</span>
+153:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000065" class="method-detail">
+        <a name="M000065"></a>
+
+        <div class="method-heading">
+          <a href="#M000065" class="method-signature">
+          <span class="method-name">iterate_midway</span><span class="method-args">(ratio) {|i| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+An iterative version of <a
+href="EnumerableStatistics.html#M000060">median</a>
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000065-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000065-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 164</span>
+164:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">iterate_midway</span>(<span class="ruby-identifier">ratio</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+165:       <span class="ruby-identifier">mid1</span>, <span class="ruby-identifier">mid2</span>, <span class="ruby-identifier">last_value</span>, <span class="ruby-identifier">j</span>, <span class="ruby-identifier">sorted</span>, <span class="ruby-identifier">sort1</span>, <span class="ruby-identifier">sort2</span> = <span class="ruby-identifier">middle_two</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-value">0</span>, <span class="ruby-identifier">new_sort</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-keyword kw">nil</span>
+166: 
+167:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+168:         <span class="ruby-identifier">sorted</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+169:           <span class="ruby-identifier">last_value</span> = <span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">i</span>)
+170:           <span class="ruby-identifier">j</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+171:           <span class="ruby-identifier">sort1</span> = <span class="ruby-identifier">last_value</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">j</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">mid1</span>
+172:           <span class="ruby-identifier">sort2</span> = <span class="ruby-identifier">last_value</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">j</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">mid2</span>
+173:           <span class="ruby-keyword kw">break</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">j</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">mid2</span>
+174:         <span class="ruby-keyword kw">end</span>
+175:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">default_block</span>
+176:         <span class="ruby-identifier">sorted</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+177:           <span class="ruby-identifier">last_value</span> = <span class="ruby-identifier">default_block</span>[<span class="ruby-operator">*</span><span class="ruby-identifier">i</span>]
+178:           <span class="ruby-identifier">j</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+179:           <span class="ruby-identifier">sort1</span> = <span class="ruby-identifier">last_value</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">j</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">mid1</span>
+180:           <span class="ruby-identifier">sort2</span> = <span class="ruby-identifier">last_value</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">j</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">mid2</span>
+181:           <span class="ruby-keyword kw">break</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">j</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">mid2</span>
+182:         <span class="ruby-keyword kw">end</span>
+183:       <span class="ruby-keyword kw">else</span>
+184:         <span class="ruby-identifier">sorted</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+185:           <span class="ruby-identifier">last_value</span> = <span class="ruby-identifier">i</span>
+186:           <span class="ruby-identifier">sort1</span> = <span class="ruby-identifier">last_value</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">j</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">mid1</span>
+187:           <span class="ruby-identifier">sort2</span> = <span class="ruby-identifier">last_value</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">j</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">mid2</span>
+188:           <span class="ruby-identifier">j</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+189:           <span class="ruby-keyword kw">break</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">j</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">mid2</span>
+190:         <span class="ruby-keyword kw">end</span>
+191:       <span class="ruby-keyword kw">end</span>
+192:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">med1</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">med1</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">med2</span>
+193:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">med1</span> <span class="ruby-operator">+</span> ((<span class="ruby-identifier">med2</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">med1</span>) <span class="ruby-operator">*</span> <span class="ruby-identifier">ratio</span>)
+194:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000062" class="method-detail">
+        <a name="M000062"></a>
+
+        <div class="method-heading">
+          <a href="#M000062" class="method-signature">
+          <span class="method-name">median_position</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000062-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000062-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 146</span>
+146:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">median_position</span>
+147:       <span class="ruby-identifier">middle_two</span>.<span class="ruby-identifier">last</span>
+148:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000061" class="method-detail">
+        <a name="M000061"></a>
+
+        <div class="method-heading">
+          <a href="#M000061" class="method-signature">
+          <span class="method-name">middle_two</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000061-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000061-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 139</span>
+139:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">middle_two</span>
+140:       <span class="ruby-identifier">mid2</span> = <span class="ruby-identifier">size</span>.<span class="ruby-identifier">div</span>(<span class="ruby-value">2</span>)
+141:       <span class="ruby-identifier">mid1</span> = (<span class="ruby-identifier">size</span> <span class="ruby-operator">%</span> <span class="ruby-value">2</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">mid2</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">mid2</span>
+142:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">mid1</span>, <span class="ruby-identifier">mid2</span>
+143:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000064" class="method-detail">
+        <a name="M000064"></a>
+
+        <div class="method-heading">
+          <a href="#M000064" class="method-signature">
+          <span class="method-name">second_half</span><span class="method-args">(&amp;block)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000064-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000064-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/sirb/enumerable_statistics.rb, line 156</span>
+156:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">second_half</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+157:       <span class="ruby-comment cmt"># Total crap, but it's the way R does things, and this will most likely</span>
+158:       <span class="ruby-comment cmt"># only be used to feed R some numbers to plot, if at all. </span>
+159:       <span class="ruby-identifier">sh</span> = <span class="ruby-identifier">size</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-value">5</span> <span class="ruby-operator">?</span> <span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">median_position</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>].<span class="ruby-identifier">dup</span> <span class="ruby-operator">:</span> <span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">median_position</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">-1</span>].<span class="ruby-identifier">dup</span>
+160:     <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

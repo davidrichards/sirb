@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>File: README.rdoc</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+  <div id="fileHeader">
+    <h1>README.rdoc</h1>
+    <table class="header-table">
+    <tr class="top-aligned-row">
+      <td><strong>Path:</strong></td>
+      <td>README.rdoc
+      </td>
+    </tr>
+    <tr class="top-aligned-row">
+      <td><strong>Last Update:</strong></td>
+      <td>Mon Feb 23 18:24:59 -0700 2009</td>
+    </tr>
+    </table>
+  </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <h1>Sirb</h1>
+<ul>
+<li><a
+href="http://github.com/davidrichards/sirb/tree/master">github.com/davidrichards/sirb/tree/master</a>
+
+</li>
+</ul>
+<h2>DESCRIPTION:</h2>
+<p>
+Statistics + IRB. This offers a series of useful tools that a console
+should probably have, if your goal is to crunch a few numbers. It includes
+all the packages that I use, if you have them. Statisticus will have a
+standard library of statistical methods that you may want to have access
+to, so it&#8216;s probably worth loading that gem as well.
+</p>
+<h2>FEATURES/PROBLEMS:</h2>
+<h3>Statistical Functions</h3>
+<p>
+Sirb has a set of rather useful functions setup:
+</p>
+<ul>
+<li>max
+
+</li>
+<li>min
+
+</li>
+<li>sum
+
+</li>
+<li>mean
+
+</li>
+<li>median
+
+</li>
+<li>range
+
+</li>
+<li>variance (also var)
+
+</li>
+<li>standard_deviation (also std)
+
+</li>
+<li>sort
+
+</li>
+<li>rank
+
+</li>
+<li>order
+
+</li>
+<li>quantile
+
+</li>
+<li>cumulative_sum (also cum_sum)
+
+</li>
+<li>cumulative_product (also cum_prod)
+
+</li>
+<li>cumulative_max (also cum_max)
+
+</li>
+<li>cumulative_min (also cum_min)
+
+</li>
+</ul>
+<p>
+For comparing lists, you can use:
+</p>
+<ul>
+<li>correlation (also cor)
+
+</li>
+<li>p_max
+
+</li>
+<li>p_min
+
+</li>
+</ul>
+<p>
+For other things, you can use:
+</p>
+<ul>
+<li>max
+
+</li>
+<li>min
+
+</li>
+<li>product
+
+</li>
+<li>to_pairs
+
+</li>
+</ul>
+<h3>Libraries Loaded</h3>
+<p>
+Right now, Sirb attempts to load the following libraries (when available):
+</p>
+<ul>
+<li>NArray
+
+</li>
+<li>RGL
+
+</li>
+<li>matrix
+
+</li>
+<li>set
+
+</li>
+<li>RNum
+
+</li>
+<li>Statisticus
+
+</li>
+<li>RBTree
+
+</li>
+<li>mathn
+
+</li>
+<li>This library
+
+</li>
+</ul>
+<h3>Stored Procedures</h3>
+<p>
+As you work, you can choose to store a procedure and use it between
+sessions. I do this with pstore (part of Ruby&#8216;s standard library) and
+some code I found on Ruby Quiz by Florian Groß. The storage process is a
+little draconian, so in the short-term, you can call sirb with -w (sirb -w)
+and this feature is taken away from the runtime.
+</p>
+<p>
+This is a very useful tool to have if you have some R code that you tend to
+use often, say, or some other functions that you discover while working
+with some data.
+</p>
+<h2>SYNOPSIS:</h2>
+<h3>Functions</h3>
+<p>
+From command line:
+</p>
+<pre>
+  sirb
+  &gt;&gt; @a = [3,2,6,7,14]
+  =&gt; [3, 2, 6, 7, 14]
+  &gt;&gt; @b = [4,6,2,1,19]
+  =&gt; [4, 6, 2, 1, 19]
+  &gt;&gt; @a.max
+  =&gt; 14
+  &gt;&gt; @a.min
+  =&gt; 2
+  &gt;&gt; @a.sum
+  =&gt; 32.0
+  &gt;&gt; # Most methods have meaningful block semantics
+  ?&gt; @a.sum {|x| x ** x}
+  =&gt; 1.11120068264282e+16
+  &gt;&gt; @a.mean
+  =&gt; 6.4
+  &gt;&gt; @a.median
+  =&gt; 6
+  &gt;&gt; @a.range
+  =&gt; [2, 14]
+  &gt;&gt; @a.var
+  =&gt; 22.3
+  &gt;&gt; @a.std
+  =&gt; 4.72228758124704
+  &gt;&gt; @a.sort
+  =&gt; [2, 3, 6, 7, 14]
+  &gt;&gt; @a.rank
+  =&gt; [2, 1, 3, 4, 5]
+  &gt;&gt; @a.order
+  =&gt; [2, 1, 3, 4, 5]
+  &gt;&gt; @a.quantile
+  =&gt; [2, 3, 6, 7, 14]
+  &gt;&gt; @a.cum_sum
+  =&gt; [3.0, 5.0, 11.0, 18.0, 32.0]
+  &gt;&gt; @a.cum_prod
+  =&gt; [3.0, 6.0, 36.0, 252.0, 3528.0]
+  &gt;&gt; @a.cum_max
+  =&gt; [3, 3, 6, 7, 14]
+  &gt;&gt; @a.cum_min
+  =&gt; [3, 2, 2, 2, 2]
+  &gt;&gt; # And some methods between lists
+  ?&gt; cor(@a,@b)
+  =&gt; 0.755599551729267
+  &gt;&gt; # This is the max of each pair (or set)
+  ?&gt; p_max(@a,@b)
+  =&gt; [4, 6, 6, 7, 19]
+  &gt;&gt; # These take an arbitrary sized list
+  ?&gt; p_max(@a,@b, [1,2,3,4,5])
+  =&gt; [4, 6, 6, 7, 19]
+  &gt;&gt; # And the min
+  ?&gt; p_min(@a,@b)
+  =&gt; [3, 2, 2, 1, 14]
+  &gt;&gt; p_min(@a,@b, [1,2,3,4,5])
+  =&gt; [1, 2, 2, 1, 5]
+  &gt;&gt; # Finally, some methods out in the wild for general use:
+  ?&gt; max(1,2,3,4,5)
+  =&gt; 5
+  &gt;&gt; min(1,2,3,4,5)
+  =&gt; 1
+  &gt;&gt; product(1,2,3,4,5)
+  =&gt; 120.0
+  &gt;&gt; to_pairs(@a,@b) { |a, b| a * b }
+  =&gt; [12, 12, 12, 7, 266]
+  &gt;&gt; sum_pairs(@a,@b) { |a, b| a * b }
+  =&gt; 309.0
+</pre>
+<h3>Stored Procedures</h3>
+<pre>
+  [sirb]$: bin/sirb
+  Loading sirb (Statistics + Irb: 0.6.3)
+  &gt;&gt; set :add, lambda {|x,y| x + y}, &quot;This is my general-use adder, that adds a set of numbers&quot;
+  =&gt; &quot;add added&quot;
+  &gt;&gt; add 1, 2, 3
+  =&gt; 6
+  &gt;&gt; sirb_help :add
+  * add (takes 2 arguments, returns a single value--reduce function)
+    This is my general-use adder, that adds a set of numbers
+    Source: |x,y| x + y
+  =&gt; nil
+  &gt;&gt; sirb_help
+
+  This is Irb, with some extra libraries and commands loaded.
+  You have loaded the following libraries:
+    narray
+    rgl
+    matrix
+    rnum
+    set
+    statisticus
+    rbtree
+    rubygems
+    command runner
+    enumerable statistics
+    general statistics
+    mathn
+
+  You have setup the following commands:
+
+  * add (takes 2 arguments, returns a single value--reduce function)
+    This is my general-use adder, that adds a set of numbers
+    Source: |x,y| x + y
+
+  You can store a command like this:
+          set :command_name, lambda{|list params| command }, &quot;Optional description&quot;
+
+  &gt;&gt; commands
+  =&gt; [:add]
+  &gt;&gt; remove_command :add
+  =&gt; #&lt;Sirb::Runner:0x23df728 @block=proc {|x,y| x + y}, @name=&quot;add&quot;, @description=&quot;This is my general-use adder, that adds a set of numbers&quot;&gt;
+  &gt;&gt; commands
+  =&gt; []
+</pre>
+<h2>Known Issues</h2>
+<p>
+I&#8216;m generally dissatisfied with quantile, which I think matches the
+way that R does their quantile. However, R is inconsistent, and the
+community has inconsistent interpretations of how to handle that, so I just
+used R as the standard for today.
+</p>
+<p>
+I only mix this into <a href="../classes/Array.html">Array</a> right now. I
+need to work through the various other classes that I use, and see if this
+will mix into all of those: Vector, Matrix, Hash, RBTree, etc.
+</p>
+<p>
+I am a little uncomfortable with my stored procedures library. I want to
+review it, because it so aggressively walk on <a
+href="../classes/Proc.html">Proc</a>. There are other ideas out there that
+I will want to review when I get the chance.
+</p>
+<h2>REQUIREMENTS:</h2>
+<ul>
+<li>All the libraries are optional, but every time you log in, you will get a
+list of libraries that you may want to install.
+
+</li>
+</ul>
+<h2>INSTALL:</h2>
+<ul>
+<li>sudo gem install davidrichards-sirb
+
+</li>
+</ul>
+<h2>LICENSE:</h2>
+<p>
+(The MIT License)
+</p>
+<p>
+Copyright (c) 2009 David Richards
+</p>
+<p>
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the
+&#8216;Software&#8217;), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to the
+following conditions:
+</p>
+<p>
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+</p>
+<p>
+THE SOFTWARE IS PROVIDED &#8216;AS IS&#8217;, WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+USE OR OTHER DEALINGS IN THE SOFTWARE.
+</p>
+
+    </div>
+
+
+   </div>
+
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>
