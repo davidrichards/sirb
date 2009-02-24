@@ -59,4 +59,11 @@ class Module
   def []=(sym, f)
     self.instance_eval { define_method(sym, f) }
   end
+  
+  # Only defines the method if it hasn't been defined before.  It's a call
+  # for monkey patching, instead of gorilla patching. 
+  def safe_def(sym, &block)
+    return true if self.instance_methods.include?(sym.to_s)
+    self.[]=(sym, block)
+  end
 end

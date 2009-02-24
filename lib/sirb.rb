@@ -10,6 +10,7 @@ Dir.glob("#{File.dirname(__FILE__)}/overrides/*.rb").each { |file| require file 
 require 'rubygems'
 Loader.add_lib('rubygems')
 Loader.add_lib('mathn')
+Loader.add_lib('set')
 Loader.add_lib('matrix')
 Loader.add_lib('narray')
 Loader.add_lib('rnum')
@@ -27,6 +28,7 @@ Loader.add_lib('general statistics') {
   require 'sirb/general_statistics'
   include Sirb::GeneralStatistics
 }
+
 Loader.add_lib('enumerable statistics') {
   require 'sirb/enumerable_statistics'
   class Array
@@ -42,4 +44,4 @@ Loader.add_lib('enumerable statistics') {
   
 }
 
-puts Loader.to_s
+puts Loader.to_s if Loader.to_s

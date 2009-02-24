@@ -61,7 +61,7 @@ describe Functional do
     m5 = Benchmark.measure {cached_factorial.call(30)}
     
     # They should both be about the same
-    (m1.to_f).should be_close(m2.to_f, 0.0001)
+    (m1.to_f).should be_close(m2.to_f, 0.005)
     
     # A memoized function should be faster than a non-memoized one
     (m2.to_f > m4.to_f).should eql(true)
@@ -70,6 +70,6 @@ describe Functional do
     (m3.to_f > m4.to_f).should eql(true)
     
     # Should both have been memoized, since they are aliases.
-    (m5.to_f).should be_close(m4.to_f, 0.0001)
+    (m5.to_f).should be_close(m4.to_f, 0.005)
   end
 end

@@ -36,6 +36,7 @@ class Loader
     end
     
     def to_s
+      return nil if self.failed_libs.empty?
       "Libs loaded:\n\t" + (self.libs_loaded.empty? ? "None" : self.libs_loaded.join(", ")) + 
       "\nLibs NOT loaded:\n\t" + (self.failed_libs.empty? ? "None" : self.failed_libs.join(", "))
     end

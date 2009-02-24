@@ -14,7 +14,7 @@ module Functional
   #   sum = lambda {|x,y| x+y}
   #   sums = sum|a   # => [3,7]
   def apply(enum)
-    enum.map &self
+    enum.respond_to?(:map) ? enum.map(&self) : self.call(enum)
   end
   alias | apply
 

@@ -2,22 +2,30 @@
 require File.join(File.dirname(__FILE__), %w(.. lib version))
 
 sirb_file = File.join(File.dirname(__FILE__), %w(.. lib sirb))
+stored_procedures_file = File.join(File.dirname(__FILE__), %w(.. lib stored_procedures))
 
 irb = RUBY_PLATFORM =~ /(:?mswin|mingw)/ ? 'irb.bat' : 'irb'
 
 require 'optparse'
-options = { :sandbox => false, :irb => irb }
+options = { :sandbox => false, :irb => irb, :without_stored_procedures => false }
 OptionParser.new do |opt|
   opt.banner = "Usage: console [environment] [options]"
   opt.on("--irb=[#{irb}]", 'Invoke a different irb.') { |v| options[:irb] = v }
+  opt.on("--without-stored_procedures", 
+    'Run without storing proedures.') { |v| options[:without_stored_procedures] = true }
+  opt.on("-w", 'Run without storing procedures') { |v| options[:without_stored_procedures] = true }
   opt.parse!(ARGV)
 end
 
 libs =  " -r irb/completion -r #{sirb_file}"
+libs += " -r #{stored_procedures_file}" unless options[:without_stored_procedures]
+
+puts "Loading sirb (Statistics + Irb: #{Sirb::VERSION})"
 
 if options[:sandbox]
   puts "I'll have to think about how the whole sandbox concept should work for the sirb"
-else
-  puts "Loading sirb (Statistics + Irb: #{Sirb::VERSION})"
+elsif options[:without_stored_procedures]
+  puts "You cannot read or write stored procedures in this session."
 end
+
 exec "#{options[:irb]} #{libs} --simple-prompt"

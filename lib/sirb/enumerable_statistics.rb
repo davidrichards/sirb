@@ -141,20 +141,24 @@ module Sirb #:nodoc:
       mid1 = (size % 2 == 0) ? mid2 - 1 : mid2
       return mid1, mid2
     end
+    protected :middle_two
     
     def median_position
       middle_two.last
     end
+    protected :median_position
     
     def first_half(&block)
       fh = self[0..median_position].dup
     end
+    protected :first_half
     
     def second_half(&block)
       # Total crap, but it's the way R does things, and this will most likely
       # only be used to feed R some numbers to plot, if at all. 
       sh = size <= 5 ? self[median_position..-1].dup : self[median_position - 1..-1].dup
     end
+    protected :second_half
     
     # An iterative version of median
     def iterate_midway(ratio, &block)

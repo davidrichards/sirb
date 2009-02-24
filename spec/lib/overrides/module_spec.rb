@@ -75,4 +75,12 @@ describe Module do
     String[:backwards] = lambda { reverse }
     "david".backwards.should eql('divad')
   end
+  
+  it "should have a safe way to define an instance method only if it isn't already set. (archive_method and alias_method_chain are useful here as well.)" do
+    String[:backwards2] = lambda {reverse}
+    a = "asdf"
+    a.backwards2.should eql('fdsa')
+    String.safe_def(:backwards2) { upcase }
+    a.backwards2.should eql('fdsa')
+  end
 end
