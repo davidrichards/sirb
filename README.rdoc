@@ -8,7 +8,9 @@ Statistics + IRB.  This offers a series of useful tools that a console should pr
 
 == FEATURES/PROBLEMS:
 
-Has a set of rather useful functions setup:
+=== Statistical Functions
+
+Sirb has a set of rather useful functions setup:
 
 * max 
 * min 
@@ -40,89 +42,150 @@ For other things, you can use:
 * product
 * to_pairs
 
-Right now, it attempts to load the following libraries (if available):
+=== Libraries Loaded
+
+Right now, Sirb attempts to load the following libraries (when available):
 
 * NArray
 * RGL
 * matrix
+* set
 * RNum
 * Statisticus
 * RBTree
 * mathn
 * This library
 
+=== Stored Procedures
+
+As you work, you can choose to store a procedure and use it between sessions.  I do this with pstore (part of Ruby's standard library) and some code I found on Ruby Quiz by Florian Groß.  The storage process is a little draconian, so in the short-term, you can call sirb with -w (sirb -w) and this feature is taken away from the runtime.
+
+This is a very useful tool to have if you have some R code that you tend to use often, say, or some other functions that you discover while working with some data.
+
+== SYNOPSIS:
+
+=== Functions
+
+From command line: 
+sirb
+>> @a = [3,2,6,7,14]
+=> [3, 2, 6, 7, 14]
+>> @b = [4,6,2,1,19]
+=> [4, 6, 2, 1, 19]
+>> @a.max 
+=> 14
+>> @a.min 
+=> 2
+>> @a.sum
+=> 32.0
+>> # Most methods have meaningful block semantics
+?> @a.sum {|x| x ** x}
+=> 1.11120068264282e+16
+>> @a.mean
+=> 6.4
+>> @a.median 
+=> 6
+>> @a.range  
+=> [2, 14]
+>> @a.var
+=> 22.3
+>> @a.std
+=> 4.72228758124704
+>> @a.sort
+=> [2, 3, 6, 7, 14]
+>> @a.rank
+=> [2, 1, 3, 4, 5]
+>> @a.order  
+=> [2, 1, 3, 4, 5]
+>> @a.quantile  
+=> [2, 3, 6, 7, 14]
+>> @a.cum_sum
+=> [3.0, 5.0, 11.0, 18.0, 32.0]
+>> @a.cum_prod
+=> [3.0, 6.0, 36.0, 252.0, 3528.0]
+>> @a.cum_max
+=> [3, 3, 6, 7, 14]
+>> @a.cum_min
+=> [3, 2, 2, 2, 2]
+>> # And some methods between lists
+?> cor(@a,@b)
+=> 0.755599551729267
+>> # This is the max of each pair (or set)
+?> p_max(@a,@b)
+=> [4, 6, 6, 7, 19]
+>> # These take an arbitrary sized list
+?> p_max(@a,@b, [1,2,3,4,5])
+=> [4, 6, 6, 7, 19]
+>> # And the min
+?> p_min(@a,@b)
+=> [3, 2, 2, 1, 14]
+>> p_min(@a,@b, [1,2,3,4,5])
+=> [1, 2, 2, 1, 5]
+>> # Finally, some methods out in the wild for general use:
+?> max(1,2,3,4,5)
+=> 5
+>> min(1,2,3,4,5)
+=> 1
+>> product(1,2,3,4,5)
+=> 120.0
+>> to_pairs(@a,@b) { |a, b| a * b }
+=> [12, 12, 12, 7, 266]
+>> sum_pairs(@a,@b) { |a, b| a * b }
+=> 309.0
+
+=== Stored Procedures
+
+[sirb]$: bin/sirb
+Loading sirb (Statistics + Irb: 0.6.3)
+>> set :add, lambda {|x,y| x + y}, "This is my general-use adder, that adds a set of numbers"
+=> "add added"
+>> add 1, 2, 3
+=> 6
+>> sirb_help :add
+* add (takes 2 arguments, returns a single value--reduce function)
+  This is my general-use adder, that adds a set of numbers
+  Source: |x,y| x + y
+=> nil
+>> sirb_help
+
+This is Irb, with some extra libraries and commands loaded.
+You have loaded the following libraries:
+  narray
+  rgl
+  matrix
+  rnum
+  set
+  statisticus
+  rbtree
+  rubygems
+  command runner
+  enumerable statistics
+  general statistics
+  mathn
+
+You have setup the following commands:
+
+* add (takes 2 arguments, returns a single value--reduce function)
+  This is my general-use adder, that adds a set of numbers
+  Source: |x,y| x + y
+
+You can store a command like this:
+        set :command_name, lambda{|list params| command }, "Optional description"
+
+>> commands
+=> [:add]
+>> remove_command :add
+=> #<Sirb::Runner:0x23df728 @block=proc {|x,y| x + y}, @name="add", @description="This is my general-use adder, that adds a set of numbers">
+>> commands
+=> []
+
+== Known Issues
+
 I'm generally dissatisfied with quantile, which I think matches the way that R does their quantile.  However, R is inconsistent, and the community has inconsistent interpretations of how to handle that, so I just used R as the standard for today.
 
 I only mix this into Array right now.  I need to work through the various other classes that I use, and see if this will mix into all of those: Vector, Matrix, Hash, RBTree, etc.
 
-== SYNOPSIS:
-
-  From command line: 
-  sirb
-  >> @a = [3,2,6,7,14]
-  => [3, 2, 6, 7, 14]
-  >> @b = [4,6,2,1,19]
-  => [4, 6, 2, 1, 19]
-  >> @a.max 
-  => 14
-  >> @a.min 
-  => 2
-  >> @a.sum
-  => 32.0
-  >> # Most methods have meaningful block semantics
-  ?> @a.sum {|x| x ** x}
-  => 1.11120068264282e+16
-  >> @a.mean
-  => 6.4
-  >> @a.median 
-  => 6
-  >> @a.range  
-  => [2, 14]
-  >> @a.var
-  => 22.3
-  >> @a.std
-  => 4.72228758124704
-  >> @a.sort
-  => [2, 3, 6, 7, 14]
-  >> @a.rank
-  => [2, 1, 3, 4, 5]
-  >> @a.order  
-  => [2, 1, 3, 4, 5]
-  >> @a.quantile  
-  => [2, 3, 6, 7, 14]
-  >> @a.cum_sum
-  => [3.0, 5.0, 11.0, 18.0, 32.0]
-  >> @a.cum_prod
-  => [3.0, 6.0, 36.0, 252.0, 3528.0]
-  >> @a.cum_max
-  => [3, 3, 6, 7, 14]
-  >> @a.cum_min
-  => [3, 2, 2, 2, 2]
-  >> # And some methods between lists
-  ?> cor(@a,@b)
-  => 0.755599551729267
-  >> # This is the max of each pair (or set)
-  ?> p_max(@a,@b)
-  => [4, 6, 6, 7, 19]
-  >> # These take an arbitrary sized list
-  ?> p_max(@a,@b, [1,2,3,4,5])
-  => [4, 6, 6, 7, 19]
-  >> # And the min
-  ?> p_min(@a,@b)
-  => [3, 2, 2, 1, 14]
-  >> p_min(@a,@b, [1,2,3,4,5])
-  => [1, 2, 2, 1, 5]
-  >> # Finally, some methods out in the wild for general use:
-  ?> max(1,2,3,4,5)
-  => 5
-  >> min(1,2,3,4,5)
-  => 1
-  >> product(1,2,3,4,5)
-  => 120.0
-  >> to_pairs(@a,@b) { |a, b| a * b }
-  => [12, 12, 12, 7, 266]
-  >> sum_pairs(@a,@b) { |a, b| a * b }
-  => 309.0
+I am a little uncomfortable with my stored procedures library.  I want to review it, because it so aggressively walk on Proc.  There are other ideas out there that I will want to review when I get the chance.
 
 == REQUIREMENTS:
 
