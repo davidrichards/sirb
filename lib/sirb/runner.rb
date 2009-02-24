@@ -68,6 +68,21 @@ module Sirb #:nodoc:
         end
       end
       
+      def methodize(name)
+        eval stringify_proc(name)
+      end
+      
+      def stringify_proc(name)
+        cmd = find(name)
+        cmd_name = cmd.name
+        matched = cmd.block_source.match(/^(\|.+\|)(.+)$/)
+        cmd_params = matched ? matched[1] : ''
+        cmd_body = matched ? matched[2] : nil
+        cmd_body ||= cmd.block_source
+        cmd_body.lstrip!
+        "def #{cmd_name}(#{cmd_params})\n#{cmd_body}"
+      end
+      
       def run(name, *data)
         coerce name
         raise ArgumentError, "Unknown command: #{name}" unless self.find(@name)
@@ -188,13 +203,17 @@ module Sirb #:nodoc:
     end
     protected :arity_desc
 
+    def block_source
+      @block.source
+    end
+    
     def name_line
       "* #{self.name} (#{arity_desc})\n"
     end
     protected :name_line
     
     def source_description
-      "\n\tSource: #{@block.source}"
+      "\n\tSource: #{block_source}"
     end
     
     def empty_description
@@ -223,7 +242,12 @@ module Sirb #:nodoc:
     # May want to move this to delegate (standard library)
     # http://www.ruby-doc.org/stdlib/libdoc/delegate/rdoc/index.html
     def method_missing(sym, *args, &block)
-      if Runner.find(sym)
+      base, extension = breakdown_method(sym)
+      if Runner.find(base) and extension == 'methodize'
+        Runner.methodize(base)
+      elsif Runner.find(base.to_sym) and extension == 'to_s'
+        Runner.stringify_proc(base)
+      elsif Runner.find(sym)
         Runner.run(sym, *args)
       elsif Runner.respond_to?(sym)
         Runner.send(sym, *args, &block)
@@ -231,6 +255,14 @@ module Sirb #:nodoc:
         super
       end
     end
+    
+    def breakdown_method(sym)
+      s = sym.to_s
+      r = /^(.+)\.(.+)$/
+      md = s.match r
+      md ? [md[1].to_sym, md[2]] : [nil,nil]
+    end
+    protected :breakdown_method
   end
   
 end 
