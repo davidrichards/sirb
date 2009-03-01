@@ -1,0 +1,25 @@
+if __FILE__ == $0 then
+  require "pstore"
+
+  code = lambda { puts "Hello World!" }
+
+  File.open("proc.marshalled", "w") { |file| Marshal.dump(code, file) }
+  code = File.open("proc.marshalled") { |file| Marshal.load(file) }
+
+  code.call
+
+  store = PStore.new("proc.pstore")
+  store.transaction do
+    store["proc"] = code
+  end
+  store.transaction do
+    code = store["proc"]
+  end
+
+  code.call
+
+  File.open("proc.yaml", "w") { |file| YAML.dump(code, file) }
+  code = File.open("proc.yaml") { |file| YAML.load(file) }
+
+  code.call
+end

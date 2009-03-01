@@ -178,6 +178,12 @@ From command line:
   => #<Sirb::Runner:0x23df728 @block=proc {|x,y| x + y}, @name="add", @description="This is my general-use adder, that adds a set of numbers">
   >> commands
   => []
+  
+=== Functional-style Programming
+
+Sometimes it is useful to have a bit of functional flair when implementing equations.  I've slurped up a bit of that and included it:
+
+  .... Fill these in
 
 == Known Issues
 

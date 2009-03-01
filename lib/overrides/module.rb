@@ -53,7 +53,7 @@ class Module
   
   # Access instance methods with array notation. Returns UnboundMethod,
   alias [] instance_method
-
+  
   # Define a instance method with name sym and body f.
   # Example: String[:backwards] = lambda { reverse }
   def []=(sym, f)

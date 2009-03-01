@@ -58,6 +58,7 @@ module Sirb #:nodoc:
       protected :commands_as_commands
     
       def find(name)
+        return nil unless name
         coerce name
         begin
           pstore.transaction { pstore[@name] }
@@ -105,12 +106,12 @@ module Sirb #:nodoc:
           This is Irb, with some extra libraries and commands loaded.
           You have loaded the following libraries:
         }
-        result += tab_indent( Loader.libs_loaded.join("\n") )
+        result += tab_indent( LibLoader.libs_loaded.join("\n") )
         result += "\n\n"
         
-        if not Loader.failed_libs.empty?
+        if not LibLoader.failed_libs.empty?
           result += "The following libraries are not available on your system at this time:\n"
-          result += tab_indent( Loader.failed_libs.join("\n") )
+          result += tab_indent( LibLoader.failed_libs.join("\n") )
           result += "\n\n"
         end
                 
@@ -242,13 +243,17 @@ module Sirb #:nodoc:
     # May want to move this to delegate (standard library)
     # http://www.ruby-doc.org/stdlib/libdoc/delegate/rdoc/index.html
     def method_missing(sym, *args, &block)
-      base, extension = breakdown_method(sym)
-      if Runner.find(base) and extension == 'methodize'
-        Runner.methodize(base)
-      elsif Runner.find(base.to_sym) and extension == 'to_s'
-        Runner.stringify_proc(base)
-      elsif Runner.find(sym)
+      # base, extension = breakdown_method(sym)
+      # if Runner.find(base) and extension == 'methodize'
+      #   Runner.methodize(base)
+      # elsif Runner.find(base) and extension == 'to_s'
+      #   require 'rubygems'
+      #   require 'ruby-debug'
+      #   debugger
+      #   Runner.stringify_proc(base)
+      if Runner.find(sym)
         Runner.run(sym, *args)
+      # elsif Runner.respond_to?(sym)
       elsif Runner.respond_to?(sym)
         Runner.send(sym, *args, &block)
       else
@@ -256,6 +261,7 @@ module Sirb #:nodoc:
       end
     end
     
+    # Doesn't work.
     def breakdown_method(sym)
       s = sym.to_s
       r = /^(.+)\.(.+)$/

@@ -85,8 +85,8 @@ module Functional
 
   # Here are operator alternatives for these methods. The angle brackets
   # point to the side on which the argument is shifted in.
-  alias >> apply_head    # g = f >> 2 -- set first arg to 2
-  alias << apply_tail    # g = f << 2 -- set last arg to 2
+  # alias >> apply_head    # g = f >> 2 -- set first arg to 2
+  # alias << apply_tail    # g = f << 2 -- set last arg to 2
 
   # Return a new lambda that caches the results of this function and 
   # only calls the function when new arguments are supplied.
