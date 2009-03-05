@@ -35,6 +35,11 @@ module Sirb #:nodoc:
     def range_pairs(x,y)
       to_pairs(x,y) {|a,b| max(a,b) - min(a,b)}
     end
+    
+    # Returns the Euclidian distance between all points of a set of enumerables
+    def euclidian_distance(x,y)
+      Math.sqrt(sigma_pairs(x,y) {|a, b| (a - b) ** 2})
+    end
 
     # Returns a random integer in the range for any number of lists.  This
     # is a way to get a random vector that is tenable based on the sample
