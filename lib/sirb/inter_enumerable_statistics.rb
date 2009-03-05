@@ -19,6 +19,10 @@ module Sirb #:nodoc:
       to_pairs(x,y,&block).inject(z) {|sum, i| sum += i}
     end
     
+    def range_pairs(x,y)
+      to_pairs(x,y) {|a,b| max(a,b) - min(a,b)}
+    end
+    
     # This may be completely off!!  Write the tests!
     def correlation(x, y)
       n = min(x.size, y.size)
