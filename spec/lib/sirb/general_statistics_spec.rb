@@ -15,6 +15,7 @@ describe GeneralStatistics do
     @c.max(1,2).should eql(2)
     @c.max(1).should eql(1)
     @c.max.should be_nil
+    @c.max_index(4,5,6).should eql(2)
     Object.send(:remove_const, :CheckMaxOne)
   end
 
@@ -32,6 +33,7 @@ describe GeneralStatistics do
     @c.min(1,2).should eql(1)
     @c.min(1).should eql(1)
     @c.min.should be_nil
+    @c.min_index(4,5,6).should eql(0)
     Object.send(:remove_const, :CheckMinOne)
   end
 

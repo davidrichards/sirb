@@ -109,6 +109,10 @@ module Sirb #:nodoc:
       Object.min(*list)
     end
     
+    def min_index
+      index(min)
+    end
+    
     def max
       list = if block_given?
         map{|x| yield(x) }
@@ -118,6 +122,10 @@ module Sirb #:nodoc:
         self
       end
       Object.max(*list)
+    end
+    
+    def max_index
+      index(max)
     end
     
     # The slow way is to iterate up to the middle point.  A faster way is to

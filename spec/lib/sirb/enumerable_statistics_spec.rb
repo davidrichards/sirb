@@ -19,8 +19,16 @@ describe EnumerableStatistics do
     [1,2,3].min.should eql(1)
   end
 
-  it "should find the min" do
+  it "should find the min_index" do
+    [1,2,3].min_index.should eql(0)
+  end
+
+  it "should find the max" do
     [1,2,3].max.should eql(3)
+  end
+
+  it "should find the max_index" do
+    [1,2,3].max_index.should eql(2)
   end
   
   it "should find the median" do

@@ -22,6 +22,11 @@ module Sirb #:nodoc:
           a = max2(a,x[b], &block) }
         a
       end
+      
+      # Returns the first index of the max value
+      def max_index(*x, &block)
+        x.index(max(*x, &block))
+      end
 
       # Returns the max, the non-nil value, or nil (if both are nil).  A block
       # can be passed if a special comparison is wanted (not typically). 
@@ -35,6 +40,7 @@ module Sirb #:nodoc:
         end
       end
 
+      # Min of any number of items
       def min(*x, &block)
         return x.first if x.size == 1
         return min2(x[0], x[1], &block) if x.size == 2
@@ -42,6 +48,11 @@ module Sirb #:nodoc:
         (1...x.size).each { |b| 
           a = min2(a,x[b], &block) }
         a
+      end
+      
+      # Returns the first index of the min value
+      def min_index(*x, &block)
+        x.index(min(*x, &block))
       end
 
       # Returns the min, the non-nil value, or nil (if both are nil).  A block
