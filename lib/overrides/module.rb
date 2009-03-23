@@ -59,6 +59,7 @@ class Module
   def []=(sym, f)
     self.instance_eval { define_method(sym, f) }
   end
+  alias :save_lambda :[]=
   
   # Only defines the method if it hasn't been defined before.  It's a call
   # for monkey patching, instead of gorilla patching. 

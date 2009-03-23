@@ -10,6 +10,10 @@ Dir.glob("#{File.dirname(__FILE__)}/overrides/*.rb").each { |file| require file 
 require 'rubygems'
 LibLoader.add_lib('rubygems')
 LibLoader.add_lib('mathn')
+LibLoader.add_lib('bigdecimal') {
+  require 'bigdecimal'
+  require 'bigdecimal/math'
+}
 LibLoader.add_lib('set')
 LibLoader.add_lib('matrix')
 LibLoader.add_lib('narray')

@@ -18,6 +18,56 @@ module Sirb #:nodoc:
       (0...n).map {|i| block.call(x[i], y[i]) }
     end
     
+    # Finds the tanimoto coefficient: the intersection set size / union set
+    # size.  This is used to find the distance between two vectors.
+    # >> cor([1,2,3], [2,3,5])
+    # => 0.981980506061966
+    # >> tanimoto_pairs([1,2,3], [2,3,5])
+    # => 0.5
+    def tanimoto_pairs(x,y)
+      intersect(x,y).size / union(x,y).size.to_f
+    end
+    
+    # Sometimes it just helps to have things spelled out.  These are all
+    # part of the Array class. 
+
+    # All of the left and right hand sides, excluding duplicates.
+    # "The union of x and y"
+    def union(x,y)
+      x | y
+    end
+    
+    # What's shared on the left and right hand sides
+    # "The intersection of x and y"
+    def intersect(x,y)
+      x & y
+    end
+    
+    # Everything on the left hand side except what's shared on the right
+    # hand side. 
+    # "The relative compliment of y in x"
+    def compliment(x,y)
+      x - y
+    end
+    
+    # Everything but what's shared
+    def exclusive_not(x,y)
+      (x | y) - (x & y)
+    end
+    
+    # Finds the cartesian product, excluding duplicates items and self-
+    # referential pairs.  Yields the block value if given. 
+    def cartesian_product(x,y, &block)
+      x,y = x.uniq.dup, y.uniq.dup
+      pairs = x.inject([]) do |cp, i|
+        cp | y.map{|b| i == b ? nil : [i,b]}.compact
+      end
+      return pairs unless block_given?
+      pairs.map{|p| yield p.first, p.last}
+    end
+    alias :cp :cartesian_product
+    alias :permutations :cartesian_product
+  
     # Sigma of pairs.  Returns a single float, or whatever object is sent in.
     # Example: sigma_pairs([1,2,3], [4,5,6], 0) {|x, y| x + y}
     # returns 21 instead of 21.0.
